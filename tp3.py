@@ -1,4 +1,10 @@
-'''Comandos a codear:
+'''
+    Comandos a codear:
+    0/10* para aprobar
+    0/12* para buena nota
+    0/16* para el 11
+    0/20* en total
+
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
     aeropuertos con los cuales vamos de la ciudad origen a la ciudad 
@@ -45,3 +51,11 @@ listar_operaciones() : imprime las funcionalidades disponibles en O(1).
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
     O(A+F).
 '''
+import csv
+import sys
+
+def listar_operaciones():
+    print("Las operaciones disponibles son ", operaciones)
+    return
+
+
