@@ -1,10 +1,9 @@
-import heapq
 import sys
 import csv
-from grafo import *
+from grafo import Grafo
 from biblioteca import *
 
-COMANDOS = ["camino_mas","camino_escalas","centralidad","recorrer_mundo","vacaciones","itinerario"]
+COMANDOS = {"camino_mas", "listar_operaciones", "camino_escalas", "centralidad", "recorrer_mundo", "vacaciones", "itinerario"}
 
 '''
     Comandos a codear:
@@ -60,7 +59,22 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     O(A+F).
 '''
 
-def camino_mas(aeropuertos, vuelos, datos)
+def camino_mas(aeropuertos, vuelos, datos):
+    if len(datos) < 3:
+        sys.stderr.write("Cant parámetros incorrecta")
+        return
+    tipo = {"rapido": 0, "barato": 1}
+    peso, origen, destino = tipo[datos[0]], datos[1], datos[2]
+    minimo = (None, None)
+    for a1 in aeropuertos[origen]:
+        for a2 in aeropuertos[destino]:
+            dist, padre = camino_minimo(vuelos, a1, a2, peso)
+            if not minimo[0] or dist < minimo[0]:
+                minimo = (dist, padre)
+    recorrido = [destino]
+    while recorrido[0] != origen:
+        recorrido.insert(0, (minimo[1])[recorrido[0]])
+    print(" -> ".join(recorrido))       
 
 def procesar_archivos():
     aeropuertos = {}    
@@ -75,13 +89,24 @@ def procesar_archivos():
             vuelos.agregar_arista(origen, destino, (tiempo, precio, cant_vuelos))
     return aeropuertos, vuelos
 
-def ejecutar_comandos(aeropuertos, vuelos):
-    for linea in sys.stdin:
-        comando_arr = linea.split(" ")
-        comando_arr[0](aeropuertos, vuelos, comando_arr)
-
 def listar_operaciones():
     [print(c) for c in COMANDOS]
+
+def ejecutar_comandos(comando, datos, aeropuertos, vuelos):
+    if comando == "listar_operaciones":
+        return listar_operaciones()
+    if comando == "camino_mas":
+        return camino_mas(aeropuertos, vuelos, datos)
+    if comando == "camino_escalas":
+        return camino_escalas(aeropuertos, vuelos, datos)
+
+def procesador_entrads(aeropuertos, vuelos):
+    for linea in sys.stdin:
+        comando_arr = (linea.rstrip('\n')).split(" ")
+        if comando_arr[0] not in COMANDOS and comando_arr[0] != "listar_operaciones":
+            sys.stderr.write("Parámetro incorrecto")
+            return
+        ejecutar_comandos(comando_arr[0], comando_arr[1].split(","), aeropuertos, vuelos)
 
 def main():
     if len(sys.argv) < 2:
@@ -91,5 +116,3 @@ def main():
     ejecutar_comandos(aeropuertos, vuelos)
 
 main()
-
-

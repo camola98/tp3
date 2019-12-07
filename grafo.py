@@ -38,8 +38,11 @@ class Grafo:
             return False
         return w in self.vertices[v]
 
-    def adyacentes(self, vertice):
-        return self.vertices[vertice]
+    def adyacentes(self, v):
+        return self.vertices[v]
+
+    def peso(self, v, w):
+        return (self.vertices[v]).get(w, None)
 
     def v_random (self):
         if not len(self.vertices):

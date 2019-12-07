@@ -1,3 +1,4 @@
+from heapq import heappush, heappop, heapify
 from cola import *
 
 def bfs(grafo, origen):
@@ -77,3 +78,24 @@ def orden_topo(grafo):
                 q.encolar(w) #Encola el adyacente si quedó con grado 0
 
     return resul
+
+def camino_minimo(grafo, origen, destino, valor):
+    dist = {}
+    padre = {}
+    for v in grafo: 
+        dist[v] = -1
+    dist[origen] = 0
+    padre[origen] = None
+    heap = []
+    heapify(heap)
+    heappush(heap, (dist[origen], origen))
+    while len(heap) > 0:
+        v = heappop(heap)
+        if v == destino:
+            break
+        for w in grafo.adyacentes(v):
+            if (dist[w] == -1) or (dist[v] + (grafo.peso(v, w))[valor] < dist[w]):
+                dist[w] = dist[v] + (grafo.peso(v, w))[valor]
+                padre[w] = v
+                heappush(heap, (dist[w], w))
+    return dist, padre
