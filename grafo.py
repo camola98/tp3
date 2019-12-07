@@ -47,9 +47,6 @@ class Grafo:
     def __repr__(self):
         cad = "{"
         for clave, valor in self.vertices.items():
-            cad += "{clave}: {valor}, "
+            cad += "{}: {}, ".format(clave, valor)
         cad += "}"
         return cad
-
-    def __str__(self):
-        return self.vertices
