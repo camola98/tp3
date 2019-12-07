@@ -7,10 +7,10 @@ COMANDOS = {"camino_mas", "listar_operaciones", "camino_escalas", "centralidad",
 
 '''
     Comandos a codear:
-    0/10* para aprobar
-    0/12* para buena nota
-    0/16* para el 11
-    0/20* en total
+    4*/10* para aprobar
+    4*/12* para buena nota
+    4*/16* para el 11
+    4*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 X *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
@@ -58,6 +58,20 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
     O(A+F).
 '''
+
+def centralidad(grafo):
+    cent = {}
+    for v in grafo: cent[v] = 0
+    for v in grafo:
+        for w in grafo:
+            if v == w: continue
+            distancia, padre = camino_minimo(grafo, v, w)
+            if padre[w] is NULL: continue 
+            actual = padre[w]
+            while actual != v:
+                cent[actual] += 1
+                actual = padre[actual]
+    return cent
 
 def camino_mas(aeropuertos, vuelos, datos):
     if len(datos) < 3:
