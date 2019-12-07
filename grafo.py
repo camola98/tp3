@@ -12,11 +12,13 @@ class Grafo:
         if v not in self.vertices:
             self.vertices[v] = {}
     
-    def sacar_vertice(self, v):
+    def eliminar_vertice(self, v):
         if not self.dirigido and v in self.vertices:
             for w in self.vertices[v]:
                 self.vertices[w].pop(v)
         self.vertices.pop(v)
+        for vertice in self.vertices.values():
+            vertice.pop(v,None)
 
     def agregar_arista(self, v, w, peso):
         self.agregar_vertice(v)
@@ -25,7 +27,7 @@ class Grafo:
         if not self.dirigido:
             self.vertices[w][v] = peso
 
-    def sacar_arista(self, v, w):
+    def eliminar_arista(self, v, w):
         if v in self.vertices and w in self.vertices[v]:
             self.vertices[v].pop(w)
             if not self.dirigido:
@@ -45,8 +47,4 @@ class Grafo:
         return random.choice(list(self.vertices.keys()))
 
     def __repr__(self):
-        cad = "{"
-        for clave, valor in self.vertices.items():
-            cad += "{}: {}, ".format(clave, valor)
-        cad += "}"
-        return cad
+        return "{}".format(self.vertices)

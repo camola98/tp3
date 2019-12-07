@@ -1,3 +1,11 @@
+import heapq
+import sys
+import csv
+from grafo import *
+from biblioteca import *
+
+COMANDOS = ["camino_mas","camino_escalas","centralidad","recorrer_mundo","vacaciones","itinerario"]
+
 '''
     Comandos a codear:
     0/10* para aprobar
@@ -51,11 +59,37 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
     O(A+F).
 '''
-import csv
-import sys
+
+def camino_mas(aeropuertos, vuelos, datos)
+
+def procesar_archivos():
+    aeropuertos = {}    
+    vuelos = Grafo(True)
+    with open(sys.argv[1]) as a:
+        a_csv = csv.reader(a)
+        for linea in a_csv:
+            aeropuertos[linea[0]] = aeropuertos.get(linea[0], []) + [linea[1]]
+    with open(sys.argv[2]) as v:
+        v_csv = csv.reader(v)
+        for origen, destino, tiempo, precio, cant_vuelos in v_csv:
+            vuelos.agregar_arista(origen, destino, (tiempo, precio, cant_vuelos))
+    return aeropuertos, vuelos
+
+def ejecutar_comandos(aeropuertos, vuelos):
+    for linea in sys.stdin:
+        comando_arr = linea.split(" ")
+        comando_arr[0](aeropuertos, vuelos, comando_arr)
 
 def listar_operaciones():
-    print("Las operaciones disponibles son ", operaciones)
-    return
+    [print(c) for c in COMANDOS]
+
+def main():
+    if len(sys.argv) < 2:
+        sys.stderr.write("Cant parámetros incorrecta")
+        return
+    aeropuertos, vuelos = procesar_archivos()
+    ejecutar_comandos(aeropuertos, vuelos)
+
+main()
 
 
