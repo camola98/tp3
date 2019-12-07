@@ -7,10 +7,10 @@ COMANDOS = {"camino_mas", "listar_operaciones", "camino_escalas", "centralidad",
 
 '''
     Comandos a codear:
-    6*/10* para aprobar
-    6*/12* para buena nota
-    6*/16* para el 11
-    6*/20* en total
+    5*/10* para aprobar
+    5*/12* para buena nota
+    5*/16* para el 11
+    5*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 X *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
