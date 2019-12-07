@@ -59,19 +59,28 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     O(A+F).
 '''
 
-def centralidad(grafo):
+def centralidad(grafo, n):
     cent = {}
     for v in grafo: cent[v] = 0
     for v in grafo:
         for w in grafo:
-            if v == w: continue
-            distancia, padre = camino_minimo(grafo, v, w)
-            if padre[w] is NULL: continue 
-            actual = padre[w]
-            while actual != v:
-                cent[actual] += 1
-                actual = padre[actual]
-    return cent
+            distancias, padre = camino_minimo(grafo, v,w, grafo.peso(v,w))
+        cent_aux = {}
+        for w in grafo: cent_aux[w] = 0
+        # Aca filtramos (de ser necesario) los vertices a distancia infinita, 
+        # y ordenamos de mayor a menor
+        vertices_ordenados = ordenar_vertices(distancias) 
+        for w in vertices_ordenados:
+            cent_aux[padre[w]] += 1 + cent_aux[w]
+        # le sumamos 1 a la centralidad de todos los vertices que se encuentren en 
+        # el medio del camino
+        for w in grafo:
+            if w == v: continue
+            cent[w] += cent_aux[w]
+    centrales_ordenados = ordenar_vertices(cent)
+    for i in range(n+1):
+        print (centrales_ordenados[i])
+
 
 def camino_mas(aeropuertos, vuelos, datos):
     if len(datos) < 3:

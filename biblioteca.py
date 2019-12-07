@@ -99,3 +99,15 @@ def camino_minimo(grafo, origen, destino, valor):
                 padre[w] = v
                 heappush(heap, (dist[w], w))
     return dist, padre
+
+def ordenar_vertices(distancias):
+    ordenados = []
+    dists = []
+    for distancia in distancias.values():
+        if distancia == -1 : continue
+        dists.append(distancias)
+    dists.sort(reverse = True )
+    for d in dists:
+        for v in distancias:
+            if distancias[v] == d: ordenados.append(v)
+    return ordenados
