@@ -7,10 +7,10 @@ COMANDOS = {"camino_mas", "listar_operaciones", "camino_escalas", "centralidad",
 
 '''
     Comandos a codear:
-    4*/10* para aprobar
-    4*/12* para buena nota
-    4*/16* para el 11
-    4*/20* en total
+    6*/10* para aprobar
+    6*/12* para buena nota
+    6*/16* para el 11
+    6*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 X *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
@@ -81,24 +81,37 @@ def centralidad(grafo, n):
     for i in range(n+1):
         print (centrales_ordenados[i])
 
+def camino_aux(minimo):
+    recorrido = [minimo[3]]
+    while recorrido[0] != minimo[2]:
+        try:
+            recorrido.insert(0, (minimo[1])[recorrido[0]])
+        except KeyError:
+            sys.stderr.write("No existe camino\n")
+            return
+    print(" -> ".join(recorrido))
 
-def camino_mas(aeropuertos, vuelos, datos):
-    if len(datos) < 3:
-        sys.stderr.write("Cant parámetros incorrecta")
-        return
-    tipo = {"rapido": 0, "barato": 1}
-    peso, origen, destino = tipo[datos[0]], datos[1], datos[2]
-    minimo = (None, None)
-    for a1 in aeropuertos[origen]:
-        for a2 in aeropuertos[destino]:
-            dist, padre = camino_minimo(vuelos, a1, a2, peso)
-            if not minimo[0] or dist < minimo[0]:
-                minimo = (dist, padre)
-    recorrido = [destino]
-    while recorrido[0] != origen:
-        recorrido.insert(0, (minimo[1])[recorrido[0]])
-    print(" -> ".join(recorrido))       
+def camino_mas(aeropuertos, vuelos, filtro, origen, destino):
+    peso = 0
+    if filtro == "barato":
+        peso = 1
+    minimo = (None, None, None, None)
+    for a_origen in aeropuertos[origen]:
+        for a_destino in aeropuertos[destino]:
+            dist, padre = camino_minimo(vuelos, a_origen, a_destino, peso)
+            if not minimo[0] or (dist[a_destino] != -1 and dist[a_destino] < minimo[0]):
+                minimo = (dist, padre, a_origen, a_destino)
+    camino_aux(minimo)  
 
+def camino_escalas(aeropuertos, vuelos, origen, destino):
+    minimo = (None, None, None, None)
+    for a_origen in aeropuertos[origen]:
+        for a_destino in aeropuertos[destino]:
+            orden, padre = bfs(vuelos, a_origen, a_destino)
+            if not minimo[0] or (destino in orden and orden[destino] < minimo[0]):
+                minimo = (orden, padre, a_origen, a_destino)
+    camino_aux(minimo)
+    
 def procesar_archivos():
     aeropuertos = {}    
     vuelos = Grafo(True)
@@ -109,33 +122,30 @@ def procesar_archivos():
     with open(sys.argv[2]) as v:
         v_csv = csv.reader(v)
         for origen, destino, tiempo, precio, cant_vuelos in v_csv:
-            vuelos.agregar_arista(origen, destino, (tiempo, precio, cant_vuelos))
+            vuelos.agregar_arista(origen, destino, (int(tiempo), int(precio), int(cant_vuelos)))
     return aeropuertos, vuelos
 
 def listar_operaciones():
     [print(c) for c in COMANDOS]
 
-def ejecutar_comandos(comando, datos, aeropuertos, vuelos):
-    if comando == "listar_operaciones":
+def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
+    if comando_arr[0] == "listar_operaciones":
         return listar_operaciones()
-    if comando == "camino_mas":
-        return camino_mas(aeropuertos, vuelos, datos)
-    if comando == "camino_escalas":
-        return camino_escalas(aeropuertos, vuelos, datos)
+    datos = (" ".join(comando_arr[1:])).split(",")
+    if comando_arr[0] == "camino_mas":
+        return camino_mas(aeropuertos, vuelos, datos[0], datos[1], datos[2])
+    if comando_arr[0] == "camino_escalas":
+        return camino_escalas(aeropuertos, vuelos, datos[0], datos[1])
 
-def procesador_entrads(aeropuertos, vuelos):
+def procesar_entradas(aeropuertos, vuelos):
     for linea in sys.stdin:
         comando_arr = (linea.rstrip('\n')).split(" ")
         if comando_arr[0] not in COMANDOS and comando_arr[0] != "listar_operaciones":
             sys.stderr.write("Parámetro incorrecto")
-            return
-        ejecutar_comandos(comando_arr[0], comando_arr[1].split(","), aeropuertos, vuelos)
+        ejecutar_comandos(comando_arr, aeropuertos, vuelos)
 
 def main():
-    if len(sys.argv) < 2:
-        sys.stderr.write("Cant parámetros incorrecta")
-        return
     aeropuertos, vuelos = procesar_archivos()
-    ejecutar_comandos(aeropuertos, vuelos)
+    procesar_entradas(aeropuertos, vuelos)
 
 main()

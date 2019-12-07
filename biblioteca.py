@@ -1,7 +1,7 @@
 from heapq import heappush, heappop, heapify
 from cola import *
 
-def bfs(grafo, origen):
+def bfs(grafo, origen, destino):
     visitados = set()
     padres = {}
     orden = {}
@@ -12,6 +12,8 @@ def bfs(grafo, origen):
     q.encolar(origen)
     while not q.esta_vacia():
         v = q.desencolar()
+        if v == destino:
+            break
         for w in grafo.adyacentes(v):
             if w not in visitados:
                 visitados.add(w)
@@ -19,7 +21,7 @@ def bfs(grafo, origen):
                 orden[w] = orden[v] + 1
                 q.encolar(w)
     
-    return padres, orden
+    return orden, padres
 
 def _dfs(grafo, v, visitados, padres, orden):
     visitados.add(v)
@@ -82,7 +84,7 @@ def orden_topo(grafo):
 def camino_minimo(grafo, origen, destino, valor):
     dist = {}
     padre = {}
-    for v in grafo: 
+    for v in grafo.ver_vertices(): 
         dist[v] = -1
     dist[origen] = 0
     padre[origen] = None
@@ -90,7 +92,7 @@ def camino_minimo(grafo, origen, destino, valor):
     heapify(heap)
     heappush(heap, (dist[origen], origen))
     while len(heap) > 0:
-        v = heappop(heap)
+        v = heappop(heap)[1]
         if v == destino:
             break
         for w in grafo.adyacentes(v):
