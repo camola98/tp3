@@ -1,7 +1,7 @@
 from heapq import heappush, heappop, heapify
 from cola import *
 import random
-from random import choice
+
 def bfs(grafo, origen, destino):
     visitados = set()
     padres = {}
@@ -32,7 +32,6 @@ def reconstruir_ciclo(padres, origen, v):
     return recorrido
 
 def _obtener_ciclo_n_dfs(grafo, v, padres, orden, origen, n):
-    print(orden)
     if orden[v] == n-1 and grafo.estan_unidos(v, origen): 
         return reconstruir_ciclo(padres, origen, v)
     if orden[v] > n:
