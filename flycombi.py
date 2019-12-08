@@ -52,7 +52,7 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     que se desean visitar. Las siguientes indican la prioridad. Imprimir el orden en 
     el que deben visitarse dichas ciudades. Imprimir el camino mínimo en tiempo o 
     escalas (según lo que se haya implementado en ese caso) a realizar. O(I+R)
-    I la cantidad de ciudades a visitar, y R la cantidad de restricciones impuestas.
+    I la cantidad de ciudades a visitar, y R la cantidad de restricciones impuestas.v
     El cálculo de los caminos debe realizarse en O(I*Flog(A)) o bien O(I*(A+F)).
 *exportar_kml(archivo): exporta el archivo KML con la ruta del último comando ejecutado.
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
@@ -60,7 +60,6 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
 '''
 
 def vacaciones(grafo, origen,n):
-    visitados = set()
     recorrido = recorrido_orden_n(grafo, origen, n)
     if not recorrido: print("No se encontro recorrido") 
     else: print(" -> ".join(recorrido))
