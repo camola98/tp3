@@ -59,13 +59,15 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     O(A+F).
 '''
 
-def vacaciones(grafo, origen,n):
-    recorrido = recorrido_orden_n(grafo, origen, n)
+def vacaciones(aeropuertos, vuelos, origen, n):
+    for a_origen in aeropuertos[origen]:
+        recorrido = obtener_ciclo_n_dfs(vuelos, a_origen, n)
+        if recorrido: break
     if not recorrido: print("No se encontro recorrido") 
     else: print(" -> ".join(recorrido))
 
-def centralidad(grafo, n):
-    cent = centralidad_aux(grafo)
+def centralidad(vuelos, n):
+    cent = centralidad_aux(vuelos)
     centrales_ordenados = ordenar_vertices(cent)
     print(", ".join(centrales_ordenados[:n]))
 
@@ -128,7 +130,7 @@ def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
     if comando_arr[0] == "centralidad":
         return centralidad(vuelos, int(datos[0]))
     if comando_arr[0] == "vacaciones":
-        return vacaciones(vuelos, datos[0], int(datos[1]))
+        return vacaciones(aeropuertos, vuelos, datos[0], int(datos[1]))
     if comando_arr[0] == "centralidad_aprox":
         return centralidad_aprox(vuelos, int(datos[0]))
 

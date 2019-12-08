@@ -24,25 +24,40 @@ def bfs(grafo, origen, destino):
     
     return orden, padres
 
-def _dfs(grafo, v, visitados, padres, orden):
-    visitados.add(v)
+def reconstruir_ciclo(padres, origen, v):
+    recorrido = [v]
+    while recorrido[0] != origen:
+        recorrido.insert(0, padres[recorrido[0]])
+    recorrido.append(origen)
+    return recorrido
+
+def _obtener_ciclo_n_dfs(grafo, v, padres, orden, origen, n):
+    print(orden)
+    if orden[v] == n-1 and grafo.estan_unidos(v, origen): 
+        return reconstruir_ciclo(padres, origen, v)
+    if orden[v] > n:
+        padres.pop(v)
+        orden.pop(v)
+        return None
     for w in grafo.adyacentes(v):
-        if w not in visitados:
+        if w not in padres:
             padres[w] = v
             orden[w] = orden[v] + 1
-            _dfs(grafo, w, visitados, padres, orden)
+            ciclo_n = _obtener_ciclo_n_dfs(grafo, w, padres, orden, origen, n)
+            if ciclo_n: return ciclo_n
 
-def dfs(grafo):
-    visitados = set()
+    padres.pop(v)
+    orden.pop(v)
+    return None
+
+def obtener_ciclo_n_dfs(grafo, origen, n):
     padres = {}
     orden = {}
-    for v in grafo.ver_vertices():
-        if v not in visitados:
-            padres[v] = None
-            orden[v] = 0
-            _dfs(grafo, v, visitados, padres, orden)
-
-    return padres, orden 
+    padres[origen] = None
+    orden[origen] = 0
+    ciclo_n = _obtener_ciclo_n_dfs(grafo, origen, padres, orden, origen, n)
+     
+    return ciclo_n
 
 def es_bipartito(grafo):
     origen = grafo.v_random()
@@ -163,22 +178,3 @@ def vertice_aleatorio(pesos):
         if acum + peso_arista >= rand:
             return vertice
         acum += peso_arista    
-
-def recorrido_orden_n(grafo, origen, n):
-    for w in grafo.adyacentes(origen):
-        visitados = [origen, w]
-        _recorrido_orden_n(grafo, origen, w, n, visitados)
-        if (len(visitados) == n and visitados[0] == visitados[-1] == origen): return visitados
-
-
-def _recorrido_orden_n(grafo, origen, vertice, n, visitados):
-    if (n==1 and not grafo.estan_unidos(vertice, origen)): return
-    visitados.append(vertice)
-    if n==1:
-        visitados.append(origen)
-        return visitados
-    for w in grafo.adyacentes(vertice):
-        if w in visitados: continue
-        visitados.append(w)
-        _recorrido_orden_n(grafo, origen, vertice, n-1, visitados)
-        if (len(visitados) == n and visitados[0] == visitados[-1] == origen): return visitados
