@@ -84,8 +84,7 @@ def orden_topo(grafo):
 def camino_minimo(grafo, origen, destino, valor):
     dist = {}
     padre = {}
-    for v in grafo.ver_vertices(): 
-        dist[v] = -1
+    for v in grafo.ver_vertices(): dist[v] = -1
     dist[origen] = 0
     padre[origen] = None
     heap = []
@@ -93,23 +92,37 @@ def camino_minimo(grafo, origen, destino, valor):
     heappush(heap, (dist[origen], origen))
     while len(heap) > 0:
         v = heappop(heap)[1]
-        if v == destino:
-            break
+        if destino and v == destino: break
         for w in grafo.adyacentes(v):
             if (dist[w] == -1) or (dist[v] + (grafo.peso(v, w))[valor] < dist[w]):
                 dist[w] = dist[v] + (grafo.peso(v, w))[valor]
                 padre[w] = v
                 heappush(heap, (dist[w], w))
+    
     return dist, padre
+
+def segundo_elem(elem):
+    return elem[1]
 
 def ordenar_vertices(distancias):
     ordenados = []
-    dists = []
-    for distancia in distancias.values():
-        if distancia == -1 : continue
-        dists.append(distancias)
-    dists.sort(reverse = True )
-    for d in dists:
-        for v in distancias:
-            if distancias[v] == d: ordenados.append(v)
+    dists = list(distancias.items())
+    dists.sort(key = segundo_elem, reverse = True)
+    for i in range(len(dists)): ordenados.append(dists[i][0])
     return ordenados
+
+def centralidad_aux(grafo):
+    cent = {}
+    for v in grafo.ver_vertices(): cent[v] = 0
+    for v in grafo.ver_vertices():
+        distancias, padre = camino_minimo(grafo, v, None, 2)
+        cent_aux = {}
+        for w in grafo.ver_vertices(): cent_aux[w] = 0
+        vertices_ordenados = ordenar_vertices(distancias)
+        for w in vertices_ordenados:
+            if not padre[w]: continue
+            cent_aux[padre[w]] += 1 + cent_aux[w]
+        for w in grafo.ver_vertices():
+            if w == v: continue
+            cent[w] += cent_aux[w]
+    return cent
