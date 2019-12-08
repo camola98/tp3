@@ -130,39 +130,42 @@ def centralidad_aux(grafo):
 
 def camino_aleatorio(grafo):
     visitados = set()
-    visitados_ady = set()
     cent = {}
-    vertices = list(grafo.ver_vertices().keys())
-    for _ in range(30000):
+    vertices = list(grafo.ver_vertices())
+    for _ in range(100000):
         v = random.choice(vertices)
         if v in visitados or not grafo.adyacentes(v): continue
         visitados.add(v)
-        for _ in range(300):
-            w = arista_mas_pesada(grafo, v, visitados_ady)
-            if w == v : continue
-            visitados_ady.add(w)
+        for _ in range(50000):
+            w = ady_aleatorio(grafo, v)
             cent[w] = cent.get(w,0) + 1
+            if grafo.adyacentes(w): 
+                v=w
+                visitados.add(v)
     return cent
 
-def arista_mas_pesada(grafo, v, visitados):
-    peso_max = 0
-    adyacente_mas_pesado = v
+def ady_aleatorio(grafo, v):
+    total = 0
+    pesos = {}
     for w in grafo.adyacentes(v):
-        if w in visitados: continue
-        if grafo.peso(v,w)[2]>peso_max:
-            peso_max = grafo.peso(v,w)[2]
-            adyacente_mas_pesado = w
-    return adyacente_mas_pesado
-
-def vertice_aleatorio(pesos):
-    #Pesos es un diccionario de pesos, clave vértice vecino, valor el peso.
-    total = sum(pesos.values())
+        pesos[w] = grafo.peso(v,w)[2]
+        total+= pesos[w]
     rand = random.uniform(0, total)
     acum = 0
     for vertice, peso_arista in pesos.items():
         if acum + peso_arista >= rand:
             return vertice
-        acum += peso_arista    
+        acum += peso_arista
+
+#def arista_mas_pesada(grafo, v, visitados):
+#    peso_max = 0
+#    adyacente_mas_pesado = v
+#    for w in grafo.adyacentes(v):
+#        if w in visitados: continue
+#        if grafo.peso(v,w)[2]>peso_max:
+#            peso_max = grafo.peso(v,w)[2]
+#            adyacente_mas_pesado = w
+#    return adyacente_mas_pesado
 
 def recorrido_orden_n(grafo, origen, n):
     for w in grafo.adyacentes(origen):
