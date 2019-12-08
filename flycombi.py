@@ -7,10 +7,10 @@ COMANDOS = ["camino_mas", "camino_escalas", "centralidad", "recorrer_mundo", "va
 
 '''
     Comandos a codear:
-    8*/10* para aprobar
-    8*/12* para buena nota
-    8*/16* para el 11
-    8*/20* en total
+    9*/10* para aprobar
+    9*/12* para buena nota
+    9*/16* para el 11
+    9*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 ✓ *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
@@ -24,7 +24,7 @@ listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 ✓ ***centralidad(cantidad de aeropuertos a mostrar): imprime de mayor 
     importancia a menor importancia los n aeropuertos más centrales/
     importantes del mundo. O(A×Flog(A)). 
-*centralidad_aprox(cantidad de aeropuertos a mostrar): mismo que arriba.
+✓centralidad_aprox(cantidad de aeropuertos a mostrar): mismo que arriba.
     O(A+F).
 **pagerank(cantidad de aeropuertos a mostrar): los n aeropuertos más 
     centrales/importantes del mundo según el algoritmo de pagerank, de 
@@ -58,6 +58,19 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
     O(A+F).
 '''
+def itinerario(aeropuertos, vuelos, nombre_ruta):
+    grafo = Grafo(True)
+    with open (str(nombre_ruta),"r") as archivo:
+        ciudades = archivo.readline().rstrip('\n').split(",")
+        for ciudad in ciudades: grafo.agregar_vertice(ciudad)
+        linea = archivo.readline().split(",")
+        while (linea[0]!=''):
+            grafo.agregar_arista(linea[0],linea[1],0)
+            linea = archivo.readline().rstrip('\n').split(",")
+    orden = orden_topo(grafo)
+    print(", ".join(orden))
+    for i in range(len(orden)-1):
+        camino_escalas(aeropuertos, vuelos, orden[i], orden[i+1])
 
 def vacaciones(aeropuertos, vuelos, origen, n):
     for a_origen in aeropuertos[origen]:
@@ -133,6 +146,8 @@ def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
         return vacaciones(aeropuertos, vuelos, datos[0], int(datos[1]))
     if comando_arr[0] == "centralidad_aprox":
         return centralidad_aprox(vuelos, int(datos[0]))
+    if comando_arr[0] == "itinerario":
+        return itinerario(aeropuertos, vuelos, datos[0])
 
 def procesar_entradas(aeropuertos, vuelos):
     for linea in sys.stdin:
