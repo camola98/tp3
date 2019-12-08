@@ -128,16 +128,14 @@ def centralidad_aux(grafo):
     return cent
 
 def recorrido_orden_n(grafo, origen, n):
-    #chequeo que n tenga sentido, un ciclo puede tener a lo sumo largo = todos los vertices + 1 (el origen está 2 veces)
-    if n<=1 or len(grafo.ver_vertices())<n-1 return
     for w in grafo.adyacentes(origen):
-        visitados = [w]
+        visitados = [origen, w]
         _recorrido_orden_n(grafo, origen, w, n, visitados)
         if (len(visitados) == n and visitados[0] == visitados[-1] == origen): return visitados
 
 
 def _recorrido_orden_n(grafo, origen, vertice, n, visitados):
-    if (n==1 and not grafo.estan_unidos(vertice, origen)) return
+    if (n==1 and not grafo.estan_unidos(vertice, origen)): return
     visitados.append(vertice)
     if n==1:
         visitados.append(origen)
