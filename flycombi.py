@@ -59,6 +59,12 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     O(A+F).
 '''
 
+def vacaciones(grafo, origen,n):
+    visitados = set()
+    recorrido = recorrido_orden_n(grafo, origen, n)
+    if not recorrido: print("No se encontro recorrido") 
+    else: print(" -> ".join(recorrido))
+
 def centralidad(grafo, n):
     cent = centralidad_aux(grafo)
     centrales_ordenados = ordenar_vertices(cent)
