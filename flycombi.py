@@ -7,10 +7,10 @@ COMANDOS = ["camino_mas", "camino_escalas", "centralidad", "recorrer_mundo", "va
 
 '''
     Comandos a codear:
-    5*/10* para aprobar
-    5*/12* para buena nota
-    5*/16* para el 11
-    5*/20* en total
+    8*/10* para aprobar
+    8*/12* para buena nota
+    8*/16* para el 11
+    8*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 ✓ *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
@@ -45,7 +45,7 @@ X ***recorrer_mundo(ciudad de origen): devuelve una lista en orden de cómo debe
     ciudad ya visitada, si eso mejora la duración de nuestro viaje. 
     O(lo que se nos cante). 
 *recorrer_mundo_aprox(origen): lo mismo pero aprox. O(idealmente cuadratico).
-X ***vacaciones(origen, n): Obtener algún recorrido que comience en origen y que 
+✓ ***vacaciones(origen, n): Obtener algún recorrido que comience en origen y que 
     termine en origen también, de largo n (sin contar la última vuelta al origen).
     Si no puede devuelve "No se encontro recorrido". O(A^n).
 X **itinerario(la ruta el archivo del itinerario): La primera línea indica las ciudades 
@@ -66,6 +66,11 @@ def vacaciones(grafo, origen,n):
 
 def centralidad(grafo, n):
     cent = centralidad_aux(grafo)
+    centrales_ordenados = ordenar_vertices(cent)
+    print(", ".join(centrales_ordenados[:n]))
+
+def centralidad_aprox(grafo,n):
+    cent = camino_aleatorio(grafo)
     centrales_ordenados = ordenar_vertices(cent)
     print(", ".join(centrales_ordenados[:n]))
 
@@ -124,6 +129,8 @@ def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
         return centralidad(vuelos, int(datos[0]))
     if comando_arr[0] == "vacaciones":
         return vacaciones(vuelos, datos[0], int(datos[1]))
+    if comando_arr[0] == "centralidad_aprox":
+        return centralidad_aprox(vuelos, int(datos[0]))
 
 def procesar_entradas(aeropuertos, vuelos):
     for linea in sys.stdin:

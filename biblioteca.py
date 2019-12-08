@@ -1,6 +1,7 @@
 from heapq import heappush, heappop, heapify
 from cola import *
-
+import random
+from random import choice
 def bfs(grafo, origen, destino):
     visitados = set()
     padres = {}
@@ -126,6 +127,42 @@ def centralidad_aux(grafo):
             if w == v: continue
             cent[w] += cent_aux[w]
     return cent
+
+def camino_aleatorio(grafo):
+    visitados = set()
+    visitados_ady = set()
+    cent = {}
+    vertices = list(grafo.ver_vertices().keys())
+    for _ in range(30000):
+        v = random.choice(vertices)
+        if v in visitados or not grafo.adyacentes(v): continue
+        visitados.add(v)
+        for _ in range(300):
+            w = arista_mas_pesada(grafo, v, visitados_ady)
+            if w == v : continue
+            visitados_ady.add(w)
+            cent[w] = cent.get(w,0) + 1
+    return cent
+
+def arista_mas_pesada(grafo, v, visitados):
+    peso_max = 0
+    adyacente_mas_pesado = v
+    for w in grafo.adyacentes(v):
+        if w in visitados: continue
+        if grafo.peso(v,w)[2]>peso_max:
+            peso_max = grafo.peso(v,w)[2]
+            adyacente_mas_pesado = w
+    return adyacente_mas_pesado
+
+def vertice_aleatorio(pesos):
+    #Pesos es un diccionario de pesos, clave vértice vecino, valor el peso.
+    total = sum(pesos.values())
+    rand = random.uniform(0, total)
+    acum = 0
+    for vertice, peso_arista in pesos.items():
+        if acum + peso_arista >= rand:
+            return vertice
+        acum += peso_arista    
 
 def recorrido_orden_n(grafo, origen, n):
     for w in grafo.adyacentes(origen):
