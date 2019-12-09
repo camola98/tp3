@@ -3,7 +3,7 @@ import csv
 from grafo import Grafo
 from biblioteca import *
 
-COMANDOS = ["camino_mas", "camino_escalas", "centralidad"," centralidad_aprox", "recorrer_mundo_aprox", "vacaciones", "itinerario"]
+COMANDOS = ["camino_mas", "camino_escalas", "centralidad", "centralidad_aprox", "recorrer_mundo_aprox", "vacaciones", "itinerario"]
 
 def recorrer_mundo_aprox(vuelos, aeropuertos, origen): 
     a_visitar = set()
