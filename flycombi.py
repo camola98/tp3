@@ -71,6 +71,7 @@ def recorrer_mundo_aprox(vuelos, aeropuertos, origen):
         while recorrido[0] != orden[-1]:
             recorrido.insert(0, (padres)[recorrido[0]])
         for i in range(len(recorrido)-1):
+            if recorrido[i] == orden[-1]: continue
             orden.append(recorrido[i])
             if recorrido[i] in a_visitar: a_visitar.remove(recorrido[i])
             costo+= vuelos.peso(recorrido[i], recorrido[i+1])[1]
