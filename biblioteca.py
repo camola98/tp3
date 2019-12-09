@@ -32,13 +32,13 @@ def reconstruir_ciclo(padres, origen, penultimo, ultimo):
     return recorrido
 
 def _obtener_ciclo_n_dfs(grafo, v, padres, orden, origen, n, aeropuertos):
-    if orden[v] > n:
+    if orden[v] == n-1:
+        for a in aeropuertos:
+            if grafo.estan_unidos(a,v): return reconstruir_ciclo(padres, origen, v, a)
         padres.pop(v)
         orden.pop(v)
         return None
     for w in grafo.adyacentes(v):
-        if orden[v] == n-1 and w in aeropuertos:
-            return reconstruir_ciclo(padres, origen, v, w)
         if w not in padres:
             padres[w] = v
             orden[w] = orden[v] + 1
@@ -52,8 +52,9 @@ def _obtener_ciclo_n_dfs(grafo, v, padres, orden, origen, n, aeropuertos):
 def obtener_ciclo_n_dfs(grafo, origen, n, aeropuertos):
     padres = {}
     orden = {}
-    padres[origen] = None
-    orden[origen] = 0
+    for a in aeropuertos:
+        padres[a] = None
+        orden[a] = 0
     ciclo_n = _obtener_ciclo_n_dfs(grafo, origen, padres, orden, origen, n, aeropuertos)
      
     return ciclo_n
@@ -76,23 +77,23 @@ def es_bipartito(grafo):
 
 def orden_topo(grafo):
     grados = {}
-    for v in grafo.ver_vertices(): #Setea todos en grado 0
-        grados[v] = 0
     for v in grafo.ver_vertices():
-        for w in grafo.adyacentes(v): #Setea el grado de entrada de cada vértice
+            grados[v] = 0
+    for v in grafo.ver_vertices():
+        for w in grafo.adyacentes(v):
             grados[w] += 1
     q = Cola() 
-    for v in grafo.ver_vertices(): #Encola todos los de grado 0
+    for v in grafo.ver_vertices():
         if grados[v] == 0:
             q.encolar(v)
     resul = []
     while not q.esta_vacia():
         v = q.desencolar()
-        resul.append(v) #V tiene grado 0, asi que lo appendea al resultado
+        resul.append(v)
         for w in grafo.adyacentes(v):
-            grados[w] -= 1 #Resta un grado a todos sus adyacentes
+            grados[w] -= 1
             if grados[w] == 0: 
-                q.encolar(w) #Encola el adyacente si quedó con grado 0
+                q.encolar(w) 
 
     return resul
 

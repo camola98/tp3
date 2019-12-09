@@ -7,10 +7,10 @@ COMANDOS = ["camino_mas", "camino_escalas", "centralidad", "recorrer_mundo", "va
 
 '''
     Comandos a codear:
-    9*/10* para aprobar
-    9*/12* para buena nota
-    9*/16* para el 11
-    9*/20* en total
+    11*/10* para aprobar
+    11*/12* para buena nota
+    11*/16* para el 11
+    11*/20* en total
 
 listar_operaciones() : imprime las funcionalidades disponibles en O(1).
 ✓ *camino_mas(barato o rapido, origen, destino) : imprime una lista con los 
@@ -60,16 +60,14 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
 '''
 def itinerario(aeropuertos, vuelos, nombre_ruta):
     grafo = Grafo(True)
-    with open (str(nombre_ruta),"r") as archivo:
-        ciudades = archivo.readline().rstrip('\n').split(",")
+    with open (nombre_ruta, "r") as archivo:
+        archivo_csv = csv.reader(archivo) 
+        ciudades = next(archivo_csv)
         for ciudad in ciudades: grafo.agregar_vertice(ciudad)
-        linea = archivo.readline().split(",")
-        while (linea[0]!=''):
-            grafo.agregar_arista(linea[0],linea[1],0)
-            linea = archivo.readline().rstrip('\n').split(",")
+        for linea in archivo_csv: grafo.agregar_arista(linea[0],linea[1],0)
     orden = orden_topo(grafo)
     print(", ".join(orden))
-    for i in range(len(orden)-1):
+    for i in range(len(orden) - 1):
         camino_escalas(aeropuertos, vuelos, orden[i], orden[i+1])
 
 def vacaciones(aeropuertos, vuelos, origen, n):
@@ -99,20 +97,20 @@ def camino_mas(aeropuertos, vuelos, filtro, origen, destino):
     peso = 0
     if filtro == "barato":
         peso = 1
-    minimo = (None, None, None, None)
+    minimo = ()
     for a_origen in aeropuertos[origen]:
         for a_destino in aeropuertos[destino]:
             dist, padre = camino_minimo(vuelos, a_origen, a_destino, peso)
-            if not minimo[0] or dist[a_destino] < minimo[0]:
+            if not len(minimo) or (dist[a_destino] < (minimo[0])[minimo[3]]):
                 minimo = (dist, padre, a_origen, a_destino)
     camino_aux(minimo)  
 
 def camino_escalas(aeropuertos, vuelos, origen, destino):
-    minimo = (None, None, None, None)
+    minimo = ()
     for a_origen in aeropuertos[origen]:
         for a_destino in aeropuertos[destino]:
             orden, padre = bfs(vuelos, a_origen, a_destino)
-            if not minimo[0] or orden[destino] < minimo[0]:
+            if not len(minimo) or (orden[a_destino] < (minimo[0])[minimo[3]]):
                 minimo = (orden, padre, a_origen, a_destino)
     camino_aux(minimo)
     
