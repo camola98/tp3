@@ -106,10 +106,10 @@ def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
         return camino_escalas(aeropuertos, vuelos, datos[0], datos[1])
     if comando_arr[0] == "centralidad":
         return centralidad(vuelos, int(datos[0]))
-    if comando_arr[0] == "vacaciones":
-        return vacaciones(aeropuertos, vuelos, datos[0], int(datos[1]))
     if comando_arr[0] == "centralidad_aprox":
         return centralidad_aprox(vuelos, int(datos[0]))
+    if comando_arr[0] == "vacaciones":
+        return vacaciones(aeropuertos, vuelos, datos[0], int(datos[1]))
     if comando_arr[0] == "itinerario":
         return itinerario(aeropuertos, vuelos, datos[0])
     if comando_arr[0] == "recorrer_mundo_aprox":

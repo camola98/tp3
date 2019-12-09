@@ -124,14 +124,14 @@ def ordenar_vertices(distancias):
     ordenados = []
     dists = list(distancias.items())
     dists.sort(key = segundo_elem, reverse = True)
-    for i in range(len(dists)): ordenados.append(dists[i][0])
+    ordenados = [i[0] for i in dists]
     return ordenados
 
 def centralidad_aux(grafo):
     cent = {}
     for v in grafo.ver_vertices(): cent[v] = 0
     for v in grafo.ver_vertices():
-        distancias, padre = camino_minimo(grafo, v, None, 2)
+        distancias, padre = camino_minimo(grafo, v, None, 1)
         cent_aux = {}
         for w in grafo.ver_vertices(): cent_aux[w] = 0
         vertices_ordenados = ordenar_vertices(distancias)
@@ -140,34 +140,27 @@ def centralidad_aux(grafo):
             cent_aux[padre[w]] += 1 + cent_aux[w]
         for w in grafo.ver_vertices():
             if w == v: continue
-            cent[w] += cent_aux[w]
+            cent[w] += cent_aux[w] * grafo.peso(padre[w],w)[2]
     return cent
 
 def camino_aleatorio(grafo):
     visitados = set()
     cent = {}
-    vertices = list(grafo.ver_vertices())
-    for _ in range(100000):
-        v = random.choice(vertices)
-        if v in visitados or not grafo.adyacentes(v): continue
-        visitados.add(v)
-        for _ in range(50000):
-            w = ady_aleatorio(grafo, v)
+    for v in grafo.ver_vertices():
+        if v in visitados or not len(grafo.adyacentes(v)): continue
+        for _ in range(10000):
+            w = ady_aleatorio(grafo.adyacentes(v))
             cent[w] = cent.get(w,0) + 1
-            if grafo.adyacentes(w): 
-                v=w
+            if len(grafo.adyacentes(w)): 
+                v = w
                 visitados.add(v)
     return cent
 
-def ady_aleatorio(grafo, v):
-    total = 0
-    pesos = {}
-    for w in grafo.adyacentes(v):
-        pesos[w] = grafo.peso(v,w)[2]
-        total+= pesos[w]
+def ady_aleatorio(pesos):
+    total = sum([i[2] for i in list(pesos.values())])
     rand = random.uniform(0, total)
     acum = 0
     for vertice, peso_arista in pesos.items():
-        if acum + peso_arista >= rand:
+        if acum + peso_arista[2] >= rand:
             return vertice
-        acum += peso_arista
+        acum += peso_arista[2]
