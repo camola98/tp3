@@ -22,7 +22,8 @@ def recorrer_mundo_aprox(vuelos, aeropuertos, origen):
             orden.append(recorrido[i])
             if recorrido[i] in a_visitar: a_visitar.remove(recorrido[i])
             if i != len(recorrido)-1 : costo+= vuelos.peso(recorrido[i], recorrido[i+1])[1]
-    print (" -> ".join(orden),costo)
+    print (" -> ".join(orden))
+    print('Costo: ', costo)
 
 def itinerario(aeropuertos, vuelos, nombre_ruta):
     grafo = Grafo(True)
