@@ -48,7 +48,7 @@ X ***recorrer_mundo(ciudad de origen): devuelve una lista en orden de cómo debe
 ✓ ***vacaciones(origen, n): Obtener algún recorrido que comience en origen y que 
     termine en origen también, de largo n (sin contar la última vuelta al origen).
     Si no puede devuelve "No se encontro recorrido". O(A^n).
-X **itinerario(la ruta el archivo del itinerario): La primera línea indica las ciudades 
+✓ **itinerario(la ruta el archivo del itinerario): La primera línea indica las ciudades 
     que se desean visitar. Las siguientes indican la prioridad. Imprimir el orden en 
     el que deben visitarse dichas ciudades. Imprimir el camino mínimo en tiempo o 
     escalas (según lo que se haya implementado en ese caso) a realizar. O(I+R)
@@ -58,6 +58,24 @@ X **itinerario(la ruta el archivo del itinerario): La primera línea indica las 
     Cualquier comando salvo estadísticas, u obtención de los aeropuertos más centrales.
     O(A+F).
 '''
+
+def recorrer_mundo_aprox(vuelos, aeropuertos, origen): 
+    a_visitar = set()
+    orden = [aeropuertos[origen]][0]
+    costo = 0
+    for v in vuelos.ver_vertices(): a_visitar.add(v)
+    while (len(a_visitar)):
+        v = a_visitar.pop()
+        dists,padres = camino_minimo(vuelos, orden[-1],v,0)
+        recorrido = [v]
+        while recorrido[0] != orden[-1]:
+            recorrido.insert(0, (padres)[recorrido[0]])
+        for i in range(len(recorrido)):
+            orden.append(recorrido[i])
+            if recorrido[i] in a_visitar: a_visitar.remove(recorrido[i])
+            costo+= vuelos.peso(recorrido[min(len(recorrido)-1,i)], recorrido[min(len(recorrido)-1, i+1)])[1]
+    print (" -> ".join(orden),costo)
+
 def itinerario(aeropuertos, vuelos, nombre_ruta):
     grafo = Grafo(True)
     with open (nombre_ruta, "r") as archivo:
@@ -146,6 +164,9 @@ def ejecutar_comandos(comando_arr, aeropuertos, vuelos):
         return centralidad_aprox(vuelos, int(datos[0]))
     if comando_arr[0] == "itinerario":
         return itinerario(aeropuertos, vuelos, datos[0])
+    if comando_arr[0] == "recorrer_mundo_aprox":
+        return recorrer_mundo_aprox(vuelos, aeropuertos, datos[0])
+    
 
 def procesar_entradas(aeropuertos, vuelos):
     for linea in sys.stdin:
