@@ -64,17 +64,18 @@ def recorrer_mundo_aprox(vuelos, aeropuertos, origen):
     orden = [aeropuertos[origen]][0]
     costo = 0
     for v in vuelos.ver_vertices(): a_visitar.add(v)
+    a_visitar.remove(orden[0])
     while (len(a_visitar)):
         v = a_visitar.pop()
         dists,padres = camino_minimo(vuelos, orden[-1],v,0)
         recorrido = [v]
         while recorrido[0] != orden[-1]:
             recorrido.insert(0, (padres)[recorrido[0]])
-        for i in range(len(recorrido)-1):
+        for i in range(len(recorrido)):
             if recorrido[i] == orden[-1]: continue
             orden.append(recorrido[i])
             if recorrido[i] in a_visitar: a_visitar.remove(recorrido[i])
-            costo+= vuelos.peso(recorrido[i], recorrido[i+1])[1]
+            if i != len(recorrido)-1 : costo+= vuelos.peso(recorrido[i], recorrido[i+1])[1]
     print (" -> ".join(orden),costo)
 
 def itinerario(aeropuertos, vuelos, nombre_ruta):
