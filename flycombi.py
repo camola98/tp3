@@ -74,7 +74,7 @@ def itinerario(aeropuertos, vuelos, nombre_ruta):
 
 def vacaciones(aeropuertos, vuelos, origen, n):
     for a_origen in aeropuertos[origen]:
-        recorrido = obtener_ciclo_n_dfs(vuelos, a_origen, n)
+        recorrido = obtener_ciclo_n_dfs(vuelos, a_origen, n, aeropuertos[origen])
         if recorrido: break
     if not recorrido: print("No se encontro recorrido") 
     else: print(" -> ".join(recorrido))
