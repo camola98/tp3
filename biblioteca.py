@@ -35,15 +35,13 @@ def _obtener_ciclo_n_dfs(grafo, v, padres, orden, origen, n, aeropuertos):
     if orden[v] == n-1:
         for a in aeropuertos:
             if grafo.estan_unidos(a,v): return reconstruir_ciclo(padres, origen, v, a)
-        padres.pop(v)
-        orden.pop(v)
-        return None
     for w in grafo.adyacentes(v):
-        if w not in padres:
+        if w not in padres and orden[v] < n-1:
             padres[w] = v
             orden[w] = orden[v] + 1
             ciclo_n = _obtener_ciclo_n_dfs(grafo, w, padres, orden, origen, n, aeropuertos)
-            if ciclo_n: return ciclo_n
+            if ciclo_n: 
+                return ciclo_n
 
     padres.pop(v)
     orden.pop(v)
@@ -58,22 +56,6 @@ def obtener_ciclo_n_dfs(grafo, origen, n, aeropuertos):
     ciclo_n = _obtener_ciclo_n_dfs(grafo, origen, padres, orden, origen, n, aeropuertos)
      
     return ciclo_n
-
-def es_bipartito(grafo):
-    origen = grafo.v_random()
-    q = Cola()
-    q.encolar(origen)
-    colores = {}
-    colores[origen] = 1
-    while not q.esta_vacia():
-        v = q.desencolar()
-        for w in grafo.adyacentes(v):
-            if w not in colores:
-                colores[w] = not colores[v]
-                q.encolar(w)
-            if w in colores and colores[w] == colores[v]:
-                return False
-    return True
 
 def orden_topo(grafo):
     grados = {}

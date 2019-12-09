@@ -1,7 +1,7 @@
 import sys
 import csv
 from grafo import Grafo
-from biblioteca import *
+from biblioteca import orden_topo, obtener_ciclo_n_dfs, bfs, centralidad_aux, ordenar_vertices, camino_aleatorio, camino_minimo
 
 COMANDOS = ["camino_mas", "camino_escalas", "centralidad", "centralidad_aprox", "recorrer_mundo_aprox", "vacaciones", "itinerario"]
 
@@ -13,7 +13,7 @@ def recorrer_mundo_aprox(vuelos, aeropuertos, origen):
     a_visitar.remove(orden[0])
     while (len(a_visitar)):
         v = a_visitar.pop()
-        dists,padres = camino_minimo(vuelos, orden[-1],v,0)
+        padres = (camino_minimo(vuelos, orden[-1],v,0))[1]
         recorrido = [v]
         while recorrido[0] != orden[-1]:
             recorrido.insert(0, (padres)[recorrido[0]])
@@ -23,7 +23,7 @@ def recorrer_mundo_aprox(vuelos, aeropuertos, origen):
             if recorrido[i] in a_visitar: a_visitar.remove(recorrido[i])
             if i != len(recorrido)-1 : costo+= vuelos.peso(recorrido[i], recorrido[i+1])[1]
     print (" -> ".join(orden))
-    print('Costo: ', costo)
+    print("Costo: {}".format(costo))
 
 def itinerario(aeropuertos, vuelos, nombre_ruta):
     grafo = Grafo(True)
