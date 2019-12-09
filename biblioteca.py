@@ -171,13 +171,3 @@ def ady_aleatorio(grafo, v):
         if acum + peso_arista >= rand:
             return vertice
         acum += peso_arista
-
-#def arista_mas_pesada(grafo, v, visitados):
-#    peso_max = 0
-#    adyacente_mas_pesado = v
-#    for w in grafo.adyacentes(v):
-#        if w in visitados: continue
-#        if grafo.peso(v,w)[2]>peso_max:
-#            peso_max = grafo.peso(v,w)[2]
-#            adyacente_mas_pesado = w
-#    return adyacente_mas_pesado
